@@ -1,0 +1,29 @@
+node_modules/
+dist/
+
+# Playwright
+playwright-report/
+test-results/
+.playwright-browsers/
+
+# Environment
+.env
+.env.local
+.env.*.local
+*.env
+
+# TypeScript
+*.tsbuildinfo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Reports (generated)
+reports/*.md
