@@ -23,6 +23,38 @@ npm install
 
 ---
 
+## Configurar a aplicação sob teste
+
+O framework precisa saber onde a aplicação está rodando e, opcionalmente, onde fica o código-fonte dela. Esses valores pertencem ao **projeto da aplicação**, não a este repositório de automação.
+
+### Variáveis
+
+| Variável | O que é | Obrigatória? | Exemplo | Quem usa |
+|----------|---------|--------------|---------|----------|
+| `BASE_URL` | URL da aplicação em execução | Não — se vazia, usa `http://localhost:3000` | `https://app.exemplo.com` | `playwright.config.ts` (`use.baseURL`), Codegen do `/e2e-feature` (passo 3) e CI (secret `BASE_URL`) |
+| `SOURCE_REPO_PATH` | Caminho **absoluto local** do repositório de código-fonte da aplicação | Não — opcional | `/home/user/minha-app` | `/e2e-feature` (passo 4), que repassa ao subagente `e2e-context-reader` |
+
+### Onde configurar
+
+- **Local:** rode `/e2e-init`. Ele pergunta os dois valores (passos 8.1 e 8.3) e grava no `.env` e no `.env.example` (passo 8.4). Você também pode editar o `.env` na raiz à mão.
+- **CI:** cadastre o secret `BASE_URL` no GitHub, em *Settings → Secrets and variables → Actions* deste repositório. O workflow `.github/workflows/e2e.yml` lê esse secret. O CI não usa `SOURCE_REPO_PATH`, porque é um caminho da sua máquina.
+
+> `playwright.config.ts`, `.github/workflows/e2e.yml` e `.env.example` são gerados pelo `/e2e-init`. Se ainda não existirem no seu clone, rode o comando antes.
+
+### Se `SOURCE_REPO_PATH` ficar vazio
+
+A feature continua normalmente. O `/e2e-feature` monta o contexto só com a gravação do fluxo e registra em `specs/[feature]-context.md` que a análise do código-fonte ficou pendente. Os cenários ficam menos fundamentados no código, mas nada quebra.
+
+### Repositório da automação × repositório da aplicação
+
+O `git remote add origin` citado em [`workflow-em-definicao.md`](./workflow-em-definicao.md) aponta para o repositório **da automação** (este projeto). Não use nele a URL do repositório da aplicação.
+
+### Credenciais e Azure DevOps
+
+Credenciais por perfil (`*_CPF` e `*_PASSWORD`) e as variáveis `AZURE_DEVOPS_*` estão descritas no `.env.example`, gerado pelo `/e2e-init`. Não coloque senhas reais em arquivos versionados.
+
+---
+
 ## Stack
 
 | Tecnologia | Uso |
